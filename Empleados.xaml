@@ -1,0 +1,55 @@
+﻿<Window x:Class="WpfApp1.Empleados"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Gestión de Empleados" Height="550" Width="900" WindowStartupLocation="CenterScreen"
+        Background="{DynamicResource MainBackground}">
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <!-- Filtros y botones -->
+        <StackPanel Orientation="Horizontal" Margin="0,0,0,10" Grid.Row="0">
+            <TextBox x:Name="txtBuscarEmpleado" Width="200" Margin="0,0,10,0"/>
+            <Button Click="BtnBuscarEmpleado_Click">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE721;" Margin="0,0,5,0"/>
+                    <TextBlock Text="Buscar"/>
+                </StackPanel>
+            </Button>
+            <Button Click="BtnNuevoEmpleado_Click">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE710;" Margin="0,0,5,0"/>
+                    <TextBlock Text="Nuevo"/>
+                </StackPanel>
+            </Button>
+            <Button Click="BtnGuardarEmpleado_Click">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE74E;" Margin="0,0,5,0"/>
+                    <TextBlock Text="Guardar"/>
+                </StackPanel>
+            </Button>
+            <Button Click="BtnEliminarEmpleado_Click">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE74D;" Margin="0,0,5,0"/>
+                    <TextBlock Text="Eliminar"/>
+                </StackPanel>
+            </Button>
+        </StackPanel>
+        <!-- Formulario de empleado -->
+        <StackPanel Orientation="Horizontal" Margin="0,0,0,10" Grid.Row="1">
+            <Label Content="Nombre:" VerticalAlignment="Center"/>
+            <TextBox x:Name="txtNombre" Width="120" Margin="5,0"/>
+            <Label Content="Dirección:" VerticalAlignment="Center" Margin="10,0,0,0"/>
+            <TextBox x:Name="txtDireccion" Width="120" Margin="5,0"/>
+            <Label Content="Teléfono:" VerticalAlignment="Center" Margin="10,0,0,0"/>
+            <TextBox x:Name="txtTelefono" Width="100" Margin="5,0"/>
+            <Label Content="Cargo:" VerticalAlignment="Center" Margin="10,0,0,0"/>
+            <TextBox x:Name="txtCargo" Width="100" Margin="5,0"/>
+            <Label Content="Fecha Ingreso:" VerticalAlignment="Center" Margin="10,0,0,0"/>
+            <DatePicker x:Name="dpFechaIngreso" Width="120" Margin="5,0"/>
+        </StackPanel>
+        <DataGrid x:Name="dgEmpleados" Grid.Row="2" AutoGenerateColumns="True" IsReadOnly="True" SelectionChanged="dgEmpleados_SelectionChanged"/>
+    </Grid>
+</Window>

@@ -1,0 +1,46 @@
+﻿<Window x:Class="WpfApp1.Asistencia"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Asistencia" Height="500" Width="800" WindowStartupLocation="CenterScreen"
+        Background="{DynamicResource MainBackground}">
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- Filtros -->
+        <StackPanel Orientation="Horizontal" Grid.Row="0" Margin="0,0,0,10" VerticalAlignment="Center">
+            <Label Content="Usuario:" VerticalAlignment="Center"/>
+            <ComboBox x:Name="cbUsuarios" Width="180" Margin="5,0"/>
+            <Label Content="Fecha:" Margin="15,0,0,0" VerticalAlignment="Center"/>
+            <DatePicker x:Name="dpFecha" Width="130" Margin="5,0"/>
+            <Button Content="Filtrar" Click="BtnFiltrar_Click" Margin="15,0,0,0" Padding="15,2" Style="{StaticResource DefaultButtonStyle}"/>
+        </StackPanel>
+
+        <!-- Botones de acción -->
+        <StackPanel Orientation="Horizontal" Grid.Row="1" Margin="0,0,0,10" HorizontalAlignment="Left">
+            <Button Content="Registrar Entrada" Click="BtnEntrada_Click" Width="150" Margin="0,0,10,0" Padding="10,2" Style="{StaticResource DefaultButtonStyle}"/>
+            <Button Content="Registrar Salida" Click="BtnSalida_Click" Width="150" Margin="0,0,10,0" Padding="10,2" Style="{StaticResource DefaultButtonStyle}"/>
+            <Button Content="Exportar a Excel" Click="BtnExportarExcel_Click" Width="150" Padding="10,2" Style="{StaticResource DefaultButtonStyle}"/>
+        </StackPanel>
+
+        <!-- DataGrid de historial -->
+        <Border Grid.Row="2" BorderBrush="#DDD" BorderThickness="1" CornerRadius="6" Background="White" Padding="8">
+            <DataGrid x:Name="dgAsistencias"
+                      AutoGenerateColumns="True"
+                      CanUserAddRows="False"
+                      IsReadOnly="True"
+                      RowHeight="28"
+                      HeadersVisibility="Column"
+                      GridLinesVisibility="Horizontal"
+                      AlternatingRowBackground="#F7F7F7"
+                      Margin="0"
+                      />
+        </Border>
+    </Grid>
+</Window>

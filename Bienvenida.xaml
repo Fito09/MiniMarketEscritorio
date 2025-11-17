@@ -1,0 +1,6 @@
+﻿<Window x:Class="WpfApp1.Bienvenida"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Bienvenido" Height="300" Width="500" WindowStartupLocation="CenterScreen"
+        Background="{DynamicResource MainBackground}">
+</Window>

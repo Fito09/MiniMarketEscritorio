@@ -1,0 +1,135 @@
+# Visual Studio
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Build results
+[Dd]ebug/
+[Rr]elease/
+[Xx]64/
+[Xx]86/
+[Bb]uild/
+[Bb]in/
+[Oo]bj/
+
+# NuGet Packages
+*.nupkg
+# The packages folder can be ignored because of Package Restore
+**/packages/*
+# except build/, which is used as an MSBuild target.
+!**/packages/build/
+
+# Windows image file caches
+Thumbs.db
+ehthumbs.db
+
+# Others
+*.log
+*.vspscc
+*.vssscc
+*.tmp
+*.bak
+*.swp
+*.DS_Store
+
+# Rider
+.idea/
+*.sln.iml
+
+# Resharper
+_ReSharper*/
+*.[Rr]e[Ss]harper
+
+# DotCover
+*.dotCover
+
+# User-specific files
+*.rsuser
+*.sln.docstates
+
+# Mono Auto Generated Files
+test-results/
+
+# ASP.NET Scaffolding
+ScaffoldingReadMe.txt
+
+# StyleCop
+StyleCopReport.xml
+
+# Files built by Visual Studio
+*_i.c
+*_p.c
+*_h.h
+*.ilk
+*.meta
+*.obj
+*.pch
+*.pdb
+*.pgc
+*.pgd
+*.rsp
+*.sbr
+*.tlh
+*.tli
+*.tmp
+*.log
+*.vspscc
+*.vssscc
+*.cache
+*.suo
+*.sdf
+*.dbmdl
+*.bak
+*.backup
+*.BLOB
+*.db
+*.db3
+*.sqlite
+*.sqlite3
+*.mdf
+*.ldf
+*.ndf
+*.rdl.data
+*.rdl.designer.cs
+*.rdl.docstates
+*.rdl.sln.docstates
+*.rdl.suo
+*.rdl.user
+*.rdl.vspscc
+*.rdl.vssscc
+*.rdl.cache
+*.rdl.sdf
+*.rdl.dbmdl
+*.rdl.bak
+*.rdl.backup
+*.rdl.BLOB
+*.rdl.db
+*.rdl.db3
+*.rdl.sqlite
+*.rdl.sqlite3
+*.rdl.mdf
+*.rdl.ldf
+*.rdl.ndf
+*.rdl.rdl.data
+*.rdl.rdl.designer.cs
+*.rdl.rdl.docstates
+*.rdl.rdl.sln.docstates
+*.rdl.rdl.suo
+*.rdl.rdl.user
+*.rdl.rdl.vspscc
+*.rdl.rdl.vssscc
+*.rdl.rdl.cache
+*.rdl.rdl.sdf
+*.rdl.rdl.dbmdl
+*.rdl.rdl.bak
+*.rdl.rdl.backup
+*.rdl.rdl.BLOB
+*.rdl.rdl.db
+*.rdl.rdl.db3
+*.rdl.rdl.sqlite
+*.rdl.rdl.sqlite3
+*.rdl.rdl.mdf
+*.rdl.rdl.ldf
+*.rdl.rdl.ndf
