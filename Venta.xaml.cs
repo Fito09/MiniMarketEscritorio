@@ -332,9 +332,9 @@ namespace WpfApp1
             decimal descuento = 0;
             totalActual = subtotal - descuento;
 
-            txtSubtotal.Text = subtotal.ToString("$0.00");
-            txtDescuento.Text = descuento.ToString("$0.00");
-            txtTotal.Text = totalActual.ToString("$0.00");
+            txtSubtotal.Text = subtotal.ToString("0.00 Bs");
+            txtDescuento.Text = descuento.ToString("0.00 Bs");
+            txtTotal.Text = totalActual.ToString("0.00 Bs");
         }
 
         private void RbMetodoPago_Checked(object sender, RoutedEventArgs e)
@@ -372,9 +372,9 @@ namespace WpfApp1
             try
             {
                 decimal total = carrito.Sum(p => p.Total);
-                txtTotalEfectivo.Text = "Total a Pagar: " + total.ToString("$0.00");
+                txtTotalEfectivo.Text = "Total a Pagar: " + total.ToString("0.00 Bs");
                 txtCantidadRecibida.Text = "";
-                txtCambio.Text = "Cambio: $0.00";
+                txtCambio.Text = "Cambio: 0.00 Bs";
                 grdEfectivoModal.Visibility = Visibility.Visible;
             }
             catch (Exception ex)
@@ -394,18 +394,18 @@ namespace WpfApp1
                     decimal cambio = recibido - total;
                     if (cambio >= 0)
                     {
-                        txtCambio.Text = "Cambio: " + cambio.ToString("$0.00");
+                        txtCambio.Text = "Cambio: " + cambio.ToString("0.00 Bs");
                         txtCambio.Foreground = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromRgb(40, 167, 69));
                     }
                     else
                     {
-                        txtCambio.Text = "Falta: " + Math.Abs(cambio).ToString("$0.00");
+                        txtCambio.Text = "Falta: " + Math.Abs(cambio).ToString("0.00 Bs");
                         txtCambio.Foreground = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromRgb(220, 53, 69));
                     }
                 }
                 else
                 {
-                    txtCambio.Text = "Cambio: $0.00";
+                    txtCambio.Text = "Cambio: 0.00 Bs";
                     txtCambio.Foreground = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromRgb(40, 167, 69));
                 }
             }
@@ -429,7 +429,7 @@ namespace WpfApp1
 
                 if (recibido < total)
                 {
-                    MessageBox.Show("La cantidad recibida es menor al total. Falta: " + (total - recibido).ToString("$0.00"), "Advertencia", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    MessageBox.Show("La cantidad recibida es menor al total. Falta: " + (total - recibido).ToString("0.00 Bs"), "Advertencia", MessageBoxButton.OK, MessageBoxImage.Warning);
                     return;
                 }
 
@@ -474,7 +474,7 @@ namespace WpfApp1
                     txtTitulTarjeta.Text = "Pago con Tarjeta de Credito";
                 }
                 
-                txtTotalTarjeta.Text = "Total a Pagar: " + total.ToString("$0.00");
+                txtTotalTarjeta.Text = "Total a Pagar: " + total.ToString("0.00 Bs");
                 LimpiarCamposTarjeta();
                 grdTarjetaModal.Visibility = Visibility.Visible;
             }
@@ -605,7 +605,7 @@ namespace WpfApp1
                     return;
                 }
 
-                txtMonto.Text = "Monto a Pagar: " + total.ToString("$0.00");
+                txtMonto.Text = "Monto a Pagar: " + total.ToString("0.00 Bs");
                 
                 var bitmap = GenerarQRSimple(total);
                 if (bitmap != null)
@@ -775,13 +775,11 @@ namespace WpfApp1
 
             decimal total = carrito.Sum(p => p.Total);
 
-            // Si ya estamos procesando, no abrir modal
             if (procesandoEfectivo || procesandoQR || procesandoTarjeta)
             {
                 return;
             }
 
-            // Mostrar modal segun metodo de pago
             if (rbEfectivo.IsChecked == true)
             {
                 MostrarModalEfectivo();

@@ -108,7 +108,7 @@
                                     <ColumnDefinition Width="90"/>
                                 </Grid.ColumnDefinitions>
                                 <TextBlock Grid.Column="0" Text="Subtotal:" FontSize="11"/>
-                                <TextBlock x:Name="txtSubtotal" Grid.Column="1" Text="$0.00" TextAlignment="Right" FontWeight="Bold" FontSize="11"/>
+                                <TextBlock x:Name="txtSubtotal" Grid.Column="1" Text="0.00 Bs" TextAlignment="Right" FontWeight="Bold" FontSize="11"/>
                             </Grid>
                             <Grid Margin="0,0,0,3">
                                 <Grid.ColumnDefinitions>
@@ -116,7 +116,7 @@
                                     <ColumnDefinition Width="90"/>
                                 </Grid.ColumnDefinitions>
                                 <TextBlock Grid.Column="0" Text="Descuento:" FontSize="11"/>
-                                <TextBlock x:Name="txtDescuento" Grid.Column="1" Text="$0.00" TextAlignment="Right" FontSize="11"/>
+                                <TextBlock x:Name="txtDescuento" Grid.Column="1" Text="0.00 Bs" TextAlignment="Right" FontSize="11"/>
                             </Grid>
                             <Separator Margin="0,3"/>
                             <Grid>
@@ -125,7 +125,7 @@
                                     <ColumnDefinition Width="90"/>
                                 </Grid.ColumnDefinitions>
                                 <TextBlock Grid.Column="0" Text="TOTAL:" FontWeight="Bold" FontSize="13"/>
-                                <TextBlock x:Name="txtTotal" Grid.Column="1" Text="$0.00" TextAlignment="Right" FontWeight="Bold" FontSize="13" Foreground="#0078D7"/>
+                                <TextBlock x:Name="txtTotal" Grid.Column="1" Text="0.00 Bs" TextAlignment="Right" FontWeight="Bold" FontSize="13" Foreground="#0078D7"/>
                             </Grid>
                         </StackPanel>
                     </Border>
@@ -153,7 +153,7 @@
                     
                     <Image x:Name="imgQR" Width="350" Height="350" Margin="0,0,0,20" Stretch="UniformToFill"/>
                     
-                    <TextBlock x:Name="txtMonto" Text="Monto a Pagar: $0.00" FontSize="14" FontWeight="Bold" Foreground="#333" HorizontalAlignment="Center" Margin="0,0,0,15"/>
+                    <TextBlock x:Name="txtMonto" Text="Monto a Pagar: 0.00 Bs" FontSize="14" FontWeight="Bold" Foreground="#333" HorizontalAlignment="Center" Margin="0,0,0,15"/>
                     
                     <Button Content="Confirmar Pago" Click="BtnConfirmarPagoQR_Click" Height="40" FontWeight="Bold" Style="{StaticResource DefaultButtonStyle}" Background="#28A745" Margin="0,0,0,8"/>
                     
@@ -168,12 +168,12 @@
                 <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
                     <TextBlock Text="Pago en Efectivo" FontSize="18" FontWeight="Bold" Foreground="#0078D7" HorizontalAlignment="Center" Margin="0,0,0,20"/>
                     
-                    <TextBlock x:Name="txtTotalEfectivo" Text="Total a Pagar: $0.00" FontSize="14" FontWeight="Bold" Foreground="#333" HorizontalAlignment="Center" Margin="0,0,0,15"/>
+                    <TextBlock x:Name="txtTotalEfectivo" Text="Total a Pagar: 0.00 Bs" FontSize="14" FontWeight="Bold" Foreground="#333" HorizontalAlignment="Center" Margin="0,0,0,15"/>
                     
                     <TextBlock Text="Cantidad Recibida:" FontSize="12" FontWeight="Bold" Margin="0,0,0,5"/>
                     <TextBox x:Name="txtCantidadRecibida" Height="40" FontSize="14" Padding="10,8" HorizontalAlignment="Stretch" Margin="0,0,0,15" TextChanged="txtCantidadRecibida_TextChanged"/>
                     
-                    <TextBlock x:Name="txtCambio" Text="Cambio: $0.00" FontSize="13" FontWeight="Bold" Foreground="#28A745" HorizontalAlignment="Center" Margin="0,0,0,15"/>
+                    <TextBlock x:Name="txtCambio" Text="Cambio: 0.00 Bs" FontSize="13" FontWeight="Bold" Foreground="#28A745" HorizontalAlignment="Center" Margin="0,0,0,15"/>
                     
                     <Button Content="Confirmar Pago" Click="BtnConfirmarPagoEfectivo_Click" Height="40" FontWeight="Bold" Style="{StaticResource DefaultButtonStyle}" Background="#28A745" Margin="0,0,0,8"/>
                     
@@ -188,7 +188,7 @@
                 <StackPanel VerticalAlignment="Top">
                     <TextBlock x:Name="txtTitulTarjeta" Text="Pago con Tarjeta de Credito" FontSize="18" FontWeight="Bold" Foreground="#0078D7" HorizontalAlignment="Center" Margin="0,0,0,20"/>
                     
-                    <TextBlock x:Name="txtTotalTarjeta" Text="Total a Pagar: $0.00" FontSize="14" FontWeight="Bold" Foreground="#333" HorizontalAlignment="Center" Margin="0,0,0,15"/>
+                    <TextBlock x:Name="txtTotalTarjeta" Text="Total a Pagar: 0.00 Bs" FontSize="14" FontWeight="Bold" Foreground="#333" HorizontalAlignment="Center" Margin="0,0,0,15"/>
                     
                     <TextBlock Text="Numero de Tarjeta:" FontSize="12" FontWeight="Bold" Margin="0,0,0,5"/>
                     <TextBox x:Name="txtNumeroTarjeta" Height="35" FontSize="12" Padding="10,8" HorizontalAlignment="Stretch" Margin="0,0,0,15" MaxLength="19"/>
