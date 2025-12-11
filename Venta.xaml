@@ -1,0 +1,223 @@
+<Window x:Class="WpfApp1.Venta"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Venta de Productos" Height="850" Width="1250" WindowStartupLocation="CenterScreen">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="70"/>
+            <RowDefinition Height="70"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header Superior -->
+        <Border x:Name="borderHeader1" Grid.Row="0" Background="#F5F5F5" BorderBrush="#DDD" BorderThickness="0,0,0,1" Padding="20,15">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="0" Text="Venta de Productos - Caja" FontSize="20" FontWeight="Bold" Foreground="#0078D7" VerticalAlignment="Center"/>
+                <Button Grid.Column="1" Content="Cerrar" Click="BtnCerrarVenta_Click" VerticalAlignment="Center" Style="{StaticResource DefaultButtonStyle}" Padding="15,8"/>
+            </Grid>
+        </Border>
+
+        <!-- Selector de Cliente -->
+        <Border x:Name="borderHeader2" Grid.Row="1" Background="#F5F5F5" BorderBrush="#DDD" BorderThickness="0,0,0,1" Padding="20,15">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="300"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="0" Text="Cliente:" VerticalAlignment="Center" FontWeight="Bold" Margin="0,0,15,0"/>
+                <ComboBox x:Name="cbClienteVenta" Grid.Column="1" Height="35" VerticalContentAlignment="Center" SelectionChanged="CbClienteVenta_SelectionChanged"/>
+                <CheckBox x:Name="chkClienteAnonimo" Grid.Column="2" Content="Sin Cliente" VerticalAlignment="Center" Margin="15,0,0,0" Checked="ChkClienteAnonimo_Checked" Unchecked="ChkClienteAnonimo_Unchecked"/>
+                <TextBlock Grid.Column="3"/>
+            </Grid>
+        </Border>
+
+        <!-- Contenido Principal -->
+        <Grid Grid.Row="2" Margin="20">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="400"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Panel Izquierdo: Productos -->
+            <Border x:Name="borderProductos" Grid.Column="0" Background="White" BorderBrush="#DDD" BorderThickness="1" CornerRadius="6" Padding="15" Margin="0,0,15,0">
+                <StackPanel>
+                    <TextBlock Text="Productos Disponibles" FontSize="16" FontWeight="Bold" Margin="0,0,0,10"/>
+                    
+                    <Grid Height="35" Margin="0,0,0,10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="80"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBox x:Name="txtBuscarProductoVenta" Grid.Column="0" VerticalContentAlignment="Center" Padding="10,0"/>
+                        <Button Grid.Column="1" Content="Buscar" Click="BtnBuscarProductoVenta_Click" Margin="8,0,0,0" Style="{StaticResource DefaultButtonStyle}"/>
+                    </Grid>
+
+                    <DataGrid x:Name="dgProductosVenta" AutoGenerateColumns="False" SelectionChanged="DgProductosVenta_SelectionChanged" Height="280">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Codigo" Binding="{Binding codigo}" Width="70"/>
+                            <DataGridTextColumn Header="Nombre" Binding="{Binding nombre}" Width="*"/>
+                            <DataGridTextColumn Header="Precio" Binding="{Binding precio}" Width="70"/>
+                            <DataGridTextColumn Header="Stock" Binding="{Binding stock}" Width="60"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+
+                    <Border x:Name="borderAgregarCarrito" Background="#F5F5F5" BorderBrush="#DDD" BorderThickness="1" Padding="10" Margin="0,10,0,0" CornerRadius="4">
+                        <StackPanel>
+                            <TextBlock Text="Agregar al Carrito" FontWeight="Bold" Margin="0,0,0,8"/>
+                            <Grid Margin="0,0,0,8">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="80"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" Text="Cantidad:" VerticalAlignment="Center"/>
+                                <TextBox x:Name="txtCantidadProducto" Grid.Column="1" Height="25" VerticalContentAlignment="Center" Padding="5,0" Text="1"/>
+                            </Grid>
+                            <Button x:Name="btnAgregarCarrito" Content="Agregar al Carrito" Click="BtnAgregarCarrito_Click" Height="35" Style="{StaticResource DefaultButtonStyle}"/>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+            </Border>
+
+            <!-- Panel Derecho: Carrito y Pago -->
+            <Border x:Name="borderCarrito" Grid.Column="1" Background="White" BorderBrush="#DDD" BorderThickness="1" CornerRadius="6" Padding="15">
+                <StackPanel>
+                    <TextBlock Text="Carrito de Compras" FontSize="13" FontWeight="Bold" Margin="0,0,0,10"/>
+                    <DataGrid x:Name="dgCarrito" AutoGenerateColumns="False" Height="180" SelectionMode="Single">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Producto" Binding="{Binding Nombre}" Width="*"/>
+                            <DataGridTextColumn Header="Cant." Binding="{Binding Cantidad}" Width="40"/>
+                            <DataGridTextColumn Header="Precio" Binding="{Binding Precio}" Width="55"/>
+                            <DataGridTextColumn Header="Total" Binding="{Binding Total}" Width="50"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+
+                    <Button x:Name="btnEliminarProductoCarrito" Content="Eliminar Seleccionado" Click="BtnEliminarProductoCarrito_Click" Margin="0,8,0,0" Height="28" Style="{StaticResource DefaultButtonStyle}"/>
+
+                    <Border x:Name="borderTotales" Background="#F5F5F5" BorderBrush="#DDD" BorderThickness="1" Padding="10" Margin="0,12,0,0" CornerRadius="4">
+                        <StackPanel>
+                            <Grid Margin="0,0,0,3">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="90"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" Text="Subtotal:" FontSize="11"/>
+                                <TextBlock x:Name="txtSubtotal" Grid.Column="1" Text="$0.00" TextAlignment="Right" FontWeight="Bold" FontSize="11"/>
+                            </Grid>
+                            <Grid Margin="0,0,0,3">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="90"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" Text="Descuento:" FontSize="11"/>
+                                <TextBlock x:Name="txtDescuento" Grid.Column="1" Text="$0.00" TextAlignment="Right" FontSize="11"/>
+                            </Grid>
+                            <Separator Margin="0,3"/>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="90"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" Text="TOTAL:" FontWeight="Bold" FontSize="13"/>
+                                <TextBlock x:Name="txtTotal" Grid.Column="1" Text="$0.00" TextAlignment="Right" FontWeight="Bold" FontSize="13" Foreground="#0078D7"/>
+                            </Grid>
+                        </StackPanel>
+                    </Border>
+
+                    <TextBlock Text="Metodo de Pago" FontSize="11" FontWeight="Bold" Margin="0,12,0,8"/>
+                    <StackPanel x:Name="pnlMetodosPago">
+                        <RadioButton x:Name="rbEfectivo" Content="Efectivo" Margin="0,3" IsChecked="True" Checked="RbMetodoPago_Checked"/>
+                        <RadioButton x:Name="rbQR" Content="QR - Billetera Digital" Margin="0,3" Checked="RbMetodoPago_Checked"/>
+                        <RadioButton x:Name="rbDebito" Content="Tarjeta de Debito" Margin="0,3" Checked="RbMetodoPago_Checked"/>
+                        <RadioButton x:Name="rbCredito" Content="Tarjeta de Credito" Margin="0,3" Checked="RbMetodoPago_Checked"/>
+                    </StackPanel>
+
+                    <Button x:Name="btnProcesarVenta" Content="Procesar Venta" Click="BtnProcesarVenta_Click" Margin="0,12,0,0" Height="40" FontWeight="Bold" FontSize="12" Style="{StaticResource DefaultButtonStyle}" Background="#28A745"/>
+
+                    <Button x:Name="btnCancelarVenta" Content="Cancelar Venta" Click="BtnCancelarVenta_Click" Margin="0,6,0,0" Height="32" Style="{StaticResource DefaultButtonStyle}"/>
+                </StackPanel>
+            </Border>
+        </Grid>
+
+        <!-- Modal QR -->
+        <Grid x:Name="grdQRModal" Grid.Row="0" Grid.RowSpan="4" Background="#80000000" Visibility="Collapsed">
+            <Border Background="White" CornerRadius="10" Width="450" Height="550" VerticalAlignment="Center" HorizontalAlignment="Center" Padding="20">
+                <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                    <TextBlock Text="Escanear Codigo QR" FontSize="18" FontWeight="Bold" Foreground="#0078D7" HorizontalAlignment="Center" Margin="0,0,0,20"/>
+                    
+                    <Image x:Name="imgQR" Width="350" Height="350" Margin="0,0,0,20" Stretch="UniformToFill"/>
+                    
+                    <TextBlock x:Name="txtMonto" Text="Monto a Pagar: $0.00" FontSize="14" FontWeight="Bold" Foreground="#333" HorizontalAlignment="Center" Margin="0,0,0,15"/>
+                    
+                    <Button Content="Confirmar Pago" Click="BtnConfirmarPagoQR_Click" Height="40" FontWeight="Bold" Style="{StaticResource DefaultButtonStyle}" Background="#28A745" Margin="0,0,0,8"/>
+                    
+                    <Button Content="Cancelar" Click="BtnCancelarQR_Click" Height="35" Style="{StaticResource DefaultButtonStyle}"/>
+                </StackPanel>
+            </Border>
+        </Grid>
+
+        <!-- Modal Pago Efectivo -->
+        <Grid x:Name="grdEfectivoModal" Grid.Row="0" Grid.RowSpan="4" Background="#80000000" Visibility="Collapsed">
+            <Border Background="White" CornerRadius="10" Width="400" Height="300" VerticalAlignment="Center" HorizontalAlignment="Center" Padding="20">
+                <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                    <TextBlock Text="Pago en Efectivo" FontSize="18" FontWeight="Bold" Foreground="#0078D7" HorizontalAlignment="Center" Margin="0,0,0,20"/>
+                    
+                    <TextBlock x:Name="txtTotalEfectivo" Text="Total a Pagar: $0.00" FontSize="14" FontWeight="Bold" Foreground="#333" HorizontalAlignment="Center" Margin="0,0,0,15"/>
+                    
+                    <TextBlock Text="Cantidad Recibida:" FontSize="12" FontWeight="Bold" Margin="0,0,0,5"/>
+                    <TextBox x:Name="txtCantidadRecibida" Height="40" FontSize="14" Padding="10,8" HorizontalAlignment="Stretch" Margin="0,0,0,15" TextChanged="txtCantidadRecibida_TextChanged"/>
+                    
+                    <TextBlock x:Name="txtCambio" Text="Cambio: $0.00" FontSize="13" FontWeight="Bold" Foreground="#28A745" HorizontalAlignment="Center" Margin="0,0,0,15"/>
+                    
+                    <Button Content="Confirmar Pago" Click="BtnConfirmarPagoEfectivo_Click" Height="40" FontWeight="Bold" Style="{StaticResource DefaultButtonStyle}" Background="#28A745" Margin="0,0,0,8"/>
+                    
+                    <Button Content="Cancelar" Click="BtnCancelarEfectivo_Click" Height="35" Style="{StaticResource DefaultButtonStyle}"/>
+                </StackPanel>
+            </Border>
+        </Grid>
+
+        <!-- Modal Pago Tarjeta -->
+        <Grid x:Name="grdTarjetaModal" Grid.Row="0" Grid.RowSpan="4" Background="#80000000" Visibility="Collapsed">
+            <Border Background="White" CornerRadius="10" Width="450" Height="450" VerticalAlignment="Center" HorizontalAlignment="Center" Padding="20">
+                <StackPanel VerticalAlignment="Top">
+                    <TextBlock x:Name="txtTitulTarjeta" Text="Pago con Tarjeta de Credito" FontSize="18" FontWeight="Bold" Foreground="#0078D7" HorizontalAlignment="Center" Margin="0,0,0,20"/>
+                    
+                    <TextBlock x:Name="txtTotalTarjeta" Text="Total a Pagar: $0.00" FontSize="14" FontWeight="Bold" Foreground="#333" HorizontalAlignment="Center" Margin="0,0,0,15"/>
+                    
+                    <TextBlock Text="Numero de Tarjeta:" FontSize="12" FontWeight="Bold" Margin="0,0,0,5"/>
+                    <TextBox x:Name="txtNumeroTarjeta" Height="35" FontSize="12" Padding="10,8" HorizontalAlignment="Stretch" Margin="0,0,0,15" MaxLength="19"/>
+                    
+                    <Grid Margin="0,0,0,15">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        
+                        <StackPanel Grid.Column="0" Margin="0,0,10,0">
+                            <TextBlock Text="Vencimiento (MM/YY):" FontSize="12" FontWeight="Bold" Margin="0,0,0,5"/>
+                            <TextBox x:Name="txtVencimiento" Height="35" FontSize="12" Padding="10,8" MaxLength="5"/>
+                        </StackPanel>
+                        
+                        <StackPanel Grid.Column="1" Margin="10,0,0,0">
+                            <TextBlock Text="CVV:" FontSize="12" FontWeight="Bold" Margin="0,0,0,5"/>
+                            <TextBox x:Name="txtCVV" Height="35" FontSize="12" Padding="10,8" MaxLength="4"/>
+                        </StackPanel>
+                    </Grid>
+                    
+                    <TextBlock Text="Nombre del Titular:" FontSize="12" FontWeight="Bold" Margin="0,0,0,5"/>
+                    <TextBox x:Name="txtNombreTitular" Height="35" FontSize="12" Padding="10,8" HorizontalAlignment="Stretch" Margin="0,0,0,15"/>
+                    
+                    <Button Content="Confirmar Pago" Click="BtnConfirmarPagoTarjeta_Click" Height="40" FontWeight="Bold" Style="{StaticResource DefaultButtonStyle}" Background="#28A745" Margin="0,0,0,8"/>
+                    
+                    <Button Content="Cancelar" Click="BtnCancelarTarjeta_Click" Height="35" Style="{StaticResource DefaultButtonStyle}"/>
+                </StackPanel>
+            </Border>
+        </Grid>
+    </Grid>
+</Window>

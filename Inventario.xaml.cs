@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Data;
 using System.Windows;
+using System.Windows.Controls;
 using Npgsql;
 
 namespace WpfApp1
@@ -72,13 +73,19 @@ namespace WpfApp1
             }
         }
 
+        private void BtnNuevoProducto_Click(object sender, RoutedEventArgs e)
+        {
+            productoSeleccionadoId = null;
+            txtCodigo.Text = "";
+            txtNombre.Text = "";
+            txtCategoria.Text = "";
+            txtPrecio.Text = "";
+            txtStock.Text = "";
+            dpFechaVencimiento.SelectedDate = null;
+        }
+
         private void BtnGuardarProducto_Click(object sender, RoutedEventArgs e)
         {
-            if (productoSeleccionadoId == null)
-            {
-                MessageBox.Show("Seleccione un producto para editar.");
-                return;
-            }
             // Validaciones básicas
             if (string.IsNullOrWhiteSpace(txtNombre.Text) || string.IsNullOrWhiteSpace(txtCodigo.Text) || string.IsNullOrWhiteSpace(txtPrecio.Text) || string.IsNullOrWhiteSpace(txtStock.Text))
             {
@@ -95,17 +102,71 @@ namespace WpfApp1
             using (var conn = new NpgsqlConnection(connectionString))
             {
                 conn.Open();
-                var cmd = new NpgsqlCommand("UPDATE producto SET codigo=@codigo, nombre=@nombre, categoria=@categoria, precio=@precio, stock=@stock, fecha_vencimiento=@fecha WHERE id_producto=@id", conn);
-                cmd.Parameters.AddWithValue("codigo", txtCodigo.Text.Trim());
-                cmd.Parameters.AddWithValue("nombre", txtNombre.Text.Trim());
-                cmd.Parameters.AddWithValue("categoria", txtCategoria.Text.Trim());
-                cmd.Parameters.AddWithValue("precio", precio);
-                cmd.Parameters.AddWithValue("stock", stock);
-                cmd.Parameters.AddWithValue("fecha", dpFechaVencimiento.SelectedDate ?? (object)DBNull.Value);
-                cmd.Parameters.AddWithValue("id", productoSeleccionadoId.Value);
-                cmd.ExecuteNonQuery();
-                MessageBox.Show("Producto actualizado.");
+                if (productoSeleccionadoId == null)
+                {
+                    // Crear nuevo producto
+                    var cmd = new NpgsqlCommand("INSERT INTO producto (codigo, nombre, categoria, precio, stock, fecha_vencimiento) VALUES (@codigo, @nombre, @categoria, @precio, @stock, @fecha)", conn);
+                    cmd.Parameters.AddWithValue("codigo", txtCodigo.Text.Trim());
+                    cmd.Parameters.AddWithValue("nombre", txtNombre.Text.Trim());
+                    cmd.Parameters.AddWithValue("categoria", txtCategoria.Text.Trim());
+                    cmd.Parameters.AddWithValue("precio", precio);
+                    cmd.Parameters.AddWithValue("stock", stock);
+                    cmd.Parameters.AddWithValue("fecha", dpFechaVencimiento.SelectedDate ?? (object)DBNull.Value);
+                    cmd.ExecuteNonQuery();
+                    MessageBox.Show("Producto creado.");
+                }
+                else
+                {
+                    // Actualizar producto
+                    var cmd = new NpgsqlCommand("UPDATE producto SET codigo=@codigo, nombre=@nombre, categoria=@categoria, precio=@precio, stock=@stock, fecha_vencimiento=@fecha WHERE id_producto=@id", conn);
+                    cmd.Parameters.AddWithValue("codigo", txtCodigo.Text.Trim());
+                    cmd.Parameters.AddWithValue("nombre", txtNombre.Text.Trim());
+                    cmd.Parameters.AddWithValue("categoria", txtCategoria.Text.Trim());
+                    cmd.Parameters.AddWithValue("precio", precio);
+                    cmd.Parameters.AddWithValue("stock", stock);
+                    cmd.Parameters.AddWithValue("fecha", dpFechaVencimiento.SelectedDate ?? (object)DBNull.Value);
+                    cmd.Parameters.AddWithValue("id", productoSeleccionadoId.Value);
+                    cmd.ExecuteNonQuery();
+                    MessageBox.Show("Producto actualizado.");
+                }
                 CargarInventario();
+                BtnNuevoProducto_Click(null, null);
+            }
+        }
+
+        private void BtnEliminarProducto_Click(object sender, RoutedEventArgs e)
+        {
+            if (productoSeleccionadoId == null)
+            {
+                MessageBox.Show("Seleccione un producto para eliminar.");
+                return;
+            }
+            if (MessageBox.Show("¿Está seguro de eliminar este producto?", "Confirmar", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+            {
+                using (var conn = new NpgsqlConnection(connectionString))
+                {
+                    conn.Open();
+                    var cmd = new NpgsqlCommand("DELETE FROM producto WHERE id_producto=@id", conn);
+                    cmd.Parameters.AddWithValue("id", productoSeleccionadoId.Value);
+                    cmd.ExecuteNonQuery();
+                }
+                CargarInventario();
+                BtnNuevoProducto_Click(null, null);
+            }
+        }
+
+        private void BtnBuscarProducto_Click(object sender, RoutedEventArgs e)
+        {
+            string filtro = txtBuscarProducto.Text.Trim();
+            using (var conn = new NpgsqlConnection(connectionString))
+            {
+                conn.Open();
+                string query = "SELECT id_producto, codigo, nombre AS producto, categoria, precio, stock, fecha_vencimiento FROM producto WHERE nombre ILIKE @filtro OR codigo ILIKE @filtro ORDER BY nombre ASC";
+                var da = new NpgsqlDataAdapter(query, conn);
+                da.SelectCommand.Parameters.AddWithValue("filtro", "%" + filtro + "%");
+                var dt = new DataTable();
+                da.Fill(dt);
+                dgInventario.ItemsSource = dt.DefaultView;
             }
         }
     }

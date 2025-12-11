@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Data;
 using System.Windows;
+using System.Windows.Controls;
 using Npgsql;
 using System.Collections.Generic;
+using ClosedXML.Excel;
 
 namespace WpfApp1
 {
@@ -118,48 +120,118 @@ namespace WpfApp1
             CargarHistorial();
         }
 
+        private void BtnMostrarTodo_Click(object sender, RoutedEventArgs e)
+        {
+            using (var conn = new NpgsqlConnection(connectionString))
+            {
+                conn.Open();
+                var cmd = new NpgsqlCommand("SELECT e.nombre, a.fecha, a.hora_entrada, a.hora_salida FROM asistencia a JOIN empleado e ON a.id_empleado = e.id_empleado ORDER BY a.fecha DESC", conn);
+                var da = new NpgsqlDataAdapter(cmd);
+                var dt = new DataTable();
+                da.Fill(dt);
+                dgAsistencias.ItemsSource = dt.DefaultView;
+            }
+        }
+
         private void CargarHistorial()
         {
-            if (rolUsuario == "Administrador")
+            // Permitir filtrar por rango de fechas si hay dos DatePickers: dpFechaInicio y dpFechaFin
+            DateTime? fechaInicio = null, fechaFin = null;
+            if (this.FindName("dpFechaInicio") is DatePicker dpInicio && dpInicio.SelectedDate != null)
+                fechaInicio = dpInicio.SelectedDate.Value.Date;
+            if (this.FindName("dpFechaFin") is DatePicker dpFin && dpFin.SelectedDate != null)
+                fechaFin = dpFin.SelectedDate.Value.Date;
+
+            using (var conn = new NpgsqlConnection(connectionString))
             {
-                if (dpFecha.SelectedDate == null)
-                    return;
-                DateTime fecha = dpFecha.SelectedDate.Value.Date;
-                using (var conn = new NpgsqlConnection(connectionString))
+                conn.Open();
+                string query;
+                NpgsqlCommand cmd;
+                if (rolUsuario == "Administrador")
                 {
-                    conn.Open();
-                    var cmd = new NpgsqlCommand("SELECT e.nombre, a.fecha, a.hora_entrada, a.hora_salida FROM asistencia a JOIN empleado e ON a.id_empleado = e.id_empleado WHERE a.fecha=@fecha", conn);
-                    cmd.Parameters.AddWithValue("fecha", fecha);
-                    var da = new NpgsqlDataAdapter(cmd);
-                    var dt = new DataTable();
-                    da.Fill(dt);
-                    dgAsistencias.ItemsSource = dt.DefaultView;
+                    if (fechaInicio != null && fechaFin != null)
+                    {
+                        query = "SELECT e.nombre, a.fecha, a.hora_entrada, a.hora_salida FROM asistencia a JOIN empleado e ON a.id_empleado = e.id_empleado WHERE a.fecha BETWEEN @inicio AND @fin ORDER BY a.fecha DESC";
+                        cmd = new NpgsqlCommand(query, conn);
+                        cmd.Parameters.AddWithValue("inicio", fechaInicio.Value);
+                        cmd.Parameters.AddWithValue("fin", fechaFin.Value);
+                    }
+                    else if (dpFecha.SelectedDate != null)
+                    {
+                        query = "SELECT e.nombre, a.fecha, a.hora_entrada, a.hora_salida FROM asistencia a JOIN empleado e ON a.id_empleado = e.id_empleado WHERE a.fecha=@fecha ORDER BY a.fecha DESC";
+                        cmd = new NpgsqlCommand(query, conn);
+                        cmd.Parameters.AddWithValue("fecha", dpFecha.SelectedDate.Value.Date);
+                    }
+                    else
+                    {
+                        query = "SELECT e.nombre, a.fecha, a.hora_entrada, a.hora_salida FROM asistencia a JOIN empleado e ON a.id_empleado = e.id_empleado ORDER BY a.fecha DESC";
+                        cmd = new NpgsqlCommand(query, conn);
+                    }
                 }
-            }
-            else
-            {
-                if (cbUsuarios.SelectedValue == null || dpFecha.SelectedDate == null)
-                    return;
-                int idEmpleado = (int)cbUsuarios.SelectedValue;
-                DateTime fecha = dpFecha.SelectedDate.Value.Date;
-                using (var conn = new NpgsqlConnection(connectionString))
+                else
                 {
-                    conn.Open();
-                    var cmd = new NpgsqlCommand("SELECT fecha, hora_entrada, hora_salida FROM asistencia WHERE id_empleado=@id AND fecha=@fecha", conn);
-                    cmd.Parameters.AddWithValue("id", idEmpleado);
-                    cmd.Parameters.AddWithValue("fecha", fecha);
-                    var da = new NpgsqlDataAdapter(cmd);
-                    var dt = new DataTable();
-                    da.Fill(dt);
-                    dgAsistencias.ItemsSource = dt.DefaultView;
+                    if (cbUsuarios.SelectedValue == null)
+                        return;
+                    int idEmpleado = (int)cbUsuarios.SelectedValue;
+                    if (fechaInicio != null && fechaFin != null)
+                    {
+                        query = "SELECT fecha, hora_entrada, hora_salida FROM asistencia WHERE id_empleado=@id AND fecha BETWEEN @inicio AND @fin ORDER BY fecha DESC";
+                        cmd = new NpgsqlCommand(query, conn);
+                        cmd.Parameters.AddWithValue("id", idEmpleado);
+                        cmd.Parameters.AddWithValue("inicio", fechaInicio.Value);
+                        cmd.Parameters.AddWithValue("fin", fechaFin.Value);
+                    }
+                    else if (dpFecha.SelectedDate != null)
+                    {
+                        query = "SELECT fecha, hora_entrada, hora_salida FROM asistencia WHERE id_empleado=@id AND fecha=@fecha ORDER BY fecha DESC";
+                        cmd = new NpgsqlCommand(query, conn);
+                        cmd.Parameters.AddWithValue("id", idEmpleado);
+                        cmd.Parameters.AddWithValue("fecha", dpFecha.SelectedDate.Value.Date);
+                    }
+                    else
+                    {
+                        query = "SELECT fecha, hora_entrada, hora_salida FROM asistencia WHERE id_empleado=@id ORDER BY fecha DESC";
+                        cmd = new NpgsqlCommand(query, conn);
+                        cmd.Parameters.AddWithValue("id", idEmpleado);
+                    }
                 }
+                var da = new NpgsqlDataAdapter(cmd);
+                var dt = new DataTable();
+                da.Fill(dt);
+                dgAsistencias.ItemsSource = dt.DefaultView;
             }
         }
 
         private void BtnExportarExcel_Click(object sender, RoutedEventArgs e)
         {
-            // Aquí puedes usar ClosedXML o EPPlus para exportar el DataTable a Excel.
-            MessageBox.Show("Función de exportar a Excel pendiente de implementar.");
+            // Exportar el DataGrid a Excel usando ClosedXML
+            var dt = ((DataView)dgAsistencias.ItemsSource)?.ToTable();
+            if (dt == null || dt.Rows.Count == 0)
+            {
+                MessageBox.Show("No hay datos para exportar.");
+                return;
+            }
+            try
+            {
+                var saveFileDialog = new Microsoft.Win32.SaveFileDialog
+                {
+                    Filter = "Excel Files (*.xlsx)|*.xlsx",
+                    FileName = "Asistencias.xlsx"
+                };
+                if (saveFileDialog.ShowDialog() == true)
+                {
+                    using (var workbook = new ClosedXML.Excel.XLWorkbook())
+                    {
+                        workbook.Worksheets.Add(dt, "Asistencias");
+                        workbook.SaveAs(saveFileDialog.FileName);
+                    }
+                    MessageBox.Show("Exportado correctamente.");
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error al exportar: " + ex.Message);
+            }
         }
     }
 }

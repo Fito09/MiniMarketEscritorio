@@ -30,30 +30,35 @@ namespace WpfApp1
                 try
                 {
                     conn.Open();
-                    string query = "SELECT rol FROM usuario WHERE usuario = @usuario AND contrasena = @contrasena";
+                    string query = "SELECT u.id_usuario, u.rol, u.nombre, e.id_empleado FROM usuario u LEFT JOIN empleado e ON u.id_usuario = e.id_usuario WHERE u.usuario = @usuario AND u.contrasena = @contrasena";
                     using (var cmd = new NpgsqlCommand(query, conn))
                     {
                         cmd.Parameters.AddWithValue("usuario", usuario);
                         cmd.Parameters.AddWithValue("contrasena", password);
 
-                        var rol = cmd.ExecuteScalar();
-
-                        if (rol != null)
+                        using (var reader = cmd.ExecuteReader())
                         {
-                            // Abrir siempre MainWindow y pasar el rol
-                            MainWindow main = new MainWindow(rol.ToString());
-                            main.Show();
-                            this.Close();
-                        }
-                        else
-                        {
-                            intentosFallidos++;
-                            MessageBox.Show("Usuario o contraseña incorrectos.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-
-                            if (intentosFallidos >= MAX_INTENTOS)
+                            if (reader.Read())
                             {
-                                MessageBox.Show("Demasiados intentos fallidos. El sistema se cerrará.", "Error", MessageBoxButton.OK, MessageBoxImage.Stop);
-                                Application.Current.Shutdown();
+                                string rol = reader["rol"].ToString();
+                                string nombre = reader["nombre"] != DBNull.Value ? reader["nombre"].ToString() : usuario;
+                                int idEmpleado = reader["id_empleado"] != DBNull.Value ? Convert.ToInt32(reader["id_empleado"]) : 1;
+
+                                // Pasar el nombre del usuario a MainWindow
+                                MainWindow main = new MainWindow(rol, nombre, idEmpleado);
+                                main.Show();
+                                this.Close();
+                            }
+                            else
+                            {
+                                intentosFallidos++;
+                                MessageBox.Show("Usuario o contraseña incorrectos.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+
+                                if (intentosFallidos >= MAX_INTENTOS)
+                                {
+                                    MessageBox.Show("Demasiados intentos fallidos. El sistema se cerrará.", "Error", MessageBoxButton.OK, MessageBoxImage.Stop);
+                                    Application.Current.Shutdown();
+                                }
                             }
                         }
                     }

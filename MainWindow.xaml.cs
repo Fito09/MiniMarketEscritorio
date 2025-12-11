@@ -1,31 +1,46 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Media;
+using Npgsql;
 
 namespace WpfApp1
 {
     public partial class MainWindow : Window
     {
         private string rolUsuario;
+        private string nombreUsuario;
+        private int idEmpleado;
+        private string temaActual = "Claro";
+        private string connectionString = "Host=aws-1-us-east-2.pooler.supabase.com;Port=5432;Database=postgres;Username=postgres.izfxvtasfylqalgnkwia;Password=Mandachitos34;SSL Mode=Require;Trust Server Certificate=true";
 
-        public MainWindow(string rol)
+        public MainWindow(string rol, string nombre = "Usuario", int idEmp = 1)
         {
             InitializeComponent();
             rolUsuario = rol;
+            nombreUsuario = nombre;
+            idEmpleado = idEmp;
+            ActualizarInformacionUsuario();
             AplicarPermisos();
             AplicarTema("Claro");
         }
 
-        public MainWindow() : this("Administrador")
+        public MainWindow() : this("Administrador", "Usuario", 1)
         {
             var login = new Login();
             login.Show();
             this.Close();
         }
 
+        private void ActualizarInformacionUsuario()
+        {
+            txtUsuarioActual.Text = string.Format("Usuario: {0}", nombreUsuario);
+            txtRolActual.Text = string.Format("Rol: {0}", rolUsuario);
+        }
+
         private void AplicarPermisos()
         {
             var rol = rolUsuario?.Trim().ToLower();
+            btnVenta.Visibility = (rol == "vendedor" || rol == "administrador" || rol == "admin" || rol == "empleado") ? Visibility.Visible : Visibility.Collapsed;
             btnUsuarios.Visibility = (rol == "administrador" || rol == "admin") ? Visibility.Visible : Visibility.Collapsed;
             btnAsistencia.Visibility = (rol == "administrador" || rol == "admin" || rol == "empleado") ? Visibility.Visible : Visibility.Collapsed;
             btnColas.Visibility = (rol == "administrador" || rol == "admin" || rol == "empleado" || rol == "cliente") ? Visibility.Visible : Visibility.Collapsed;
@@ -34,6 +49,13 @@ namespace WpfApp1
         private void btnAsistencia_Click(object sender, RoutedEventArgs e)
         {
             new Asistencia(rolUsuario).ShowDialog();
+        }
+
+        private void btnVenta_Click(object sender, RoutedEventArgs e)
+        {
+            Venta ventanaVenta = new Venta(idEmpleado, nombreUsuario);
+            ventanaVenta.Loaded += (s, args) => ventanaVenta.AplicarTemaVenta(temaActual);
+            ventanaVenta.ShowDialog();
         }
 
         private void btnColas_Click(object sender, RoutedEventArgs e)
@@ -54,6 +76,7 @@ namespace WpfApp1
 
         private void AplicarTema(string tema)
         {
+            temaActual = tema;
             SolidColorBrush backgroundBrush;
             SolidColorBrush foregroundBrush;
             Style buttonStyle = null;

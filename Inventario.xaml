@@ -5,7 +5,13 @@
         Background="{DynamicResource MainBackground}">
     <Grid Margin="20">
         <TextBlock Text="Inventario General" FontSize="22" FontWeight="Bold" Foreground="{StaticResource BrushPrimario}" Margin="0,0,0,15"/>
-        <Border BorderBrush="#DDD" BorderThickness="1" CornerRadius="6" Background="White" Padding="8" Margin="0,40,0,0">
+        <StackPanel Orientation="Horizontal" Margin="0,35,0,0" HorizontalAlignment="Right" VerticalAlignment="Top" Height="40">
+            <TextBox x:Name="txtBuscarProducto" Width="180" Margin="0,0,5,0" VerticalAlignment="Center"/>
+            <Button Content="Buscar" Click="BtnBuscarProducto_Click" Margin="0,0,5,0"/>
+            <Button Content="Nuevo" Click="BtnNuevoProducto_Click" Margin="0,0,5,0"/>
+            <Button Content="Eliminar" Click="BtnEliminarProducto_Click"/>
+        </StackPanel>
+        <Border BorderBrush="#DDD" BorderThickness="1" CornerRadius="6" Background="White" Padding="8" Margin="0,80,0,0">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*"/>
