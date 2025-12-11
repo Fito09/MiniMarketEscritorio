@@ -10,7 +10,7 @@
     </Window.Background>
     <Grid>
         <Border CornerRadius="12" Background="#232B36" BorderBrush="#333" BorderThickness="1" Padding="40" Margin="0,10,10,10" Effect="{DynamicResource DropShadowEffect}">
-            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Width="354" Height="514">
+            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Width="356" Height="472">
                 <!-- Icono circular -->
                 <Ellipse Width="70" Height="70" Fill="#08A1E6" HorizontalAlignment="Center">
                     <Ellipse.Effect>
@@ -64,7 +64,7 @@
                                 <TextBlock Text="Iniciar Sesión"/>
                             </StackPanel>
                         </Button>
-                        
+
                     </StackPanel>
                 </Border>
                 <TextBlock Text="Al iniciar sesión, aceptas nuestros términos y condiciones" Foreground="#7B8A99" FontSize="13" HorizontalAlignment="Center" Margin="0,0,0,0"/>
